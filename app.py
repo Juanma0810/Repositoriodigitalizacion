@@ -45,45 +45,51 @@ def detectar_anomalias(df, field):
 # --- Streamlit UI ---
 st.title("Análisis de Temperatura y Humedad con IA local")
 
+# Selección de datos a mostrar
+opcion = st.selectbox("Selecciona qué datos deseas ver:", ["Temperatura", "Humedad", "Ambos"])
+
 if st.button("Cargar y analizar datos"):
-    # Análisis de temperatura
-    df_temp = get_temperature_data()
-    st.subheader("Datos crudos de temperatura:")
-    st.dataframe(df_temp)
+    if opcion == "Temperatura" or opcion == "Ambos":
+        # Análisis de temperatura
+        df_temp = get_temperature_data()
+        st.subheader("Datos crudos de temperatura:")
+        st.dataframe(df_temp)
 
-    st.subheader("Estadísticas descriptivas de temperatura:")
-    st.write(df_temp["temperatura"].describe())
+        st.subheader("Estadísticas descriptivas de temperatura:")
+        st.write(df_temp["temperatura"].describe())
 
-    df_temp = detectar_anomalias(df_temp, "temperatura")
-    outliers_temp = df_temp[df_temp["anomaly"] == -1]
+        df_temp = detectar_anomalias(df_temp, "temperatura")
+        outliers_temp = df_temp[df_temp["anomaly"] == -1]
 
-    st.subheader("Visualización de temperatura con anomalías:")
-    fig, ax = plt.subplots()
-    sns.lineplot(x="timestamp", y="temperatura", data=df_temp, label="Temperatura", ax=ax)
-    ax.scatter(outliers_temp["timestamp"], outliers_temp["temperatura"], color="red", label="Anomalía", zorder=5)
-    ax.legend()
-    st.pyplot(fig)
+        st.subheader("Visualización de temperatura con anomalías:")
+        fig, ax = plt.subplots()
+        sns.lineplot(x="timestamp", y="temperatura", data=df_temp, label="Temperatura", ax=ax)
+        ax.scatter(outliers_temp["timestamp"], outliers_temp["temperatura"], color="red", label="Anomalía", zorder=5)
+        ax.legend()
+        st.pyplot(fig)
 
-    st.subheader("Anomalías detectadas en temperatura:")
-    st.dataframe(outliers_temp)
+        st.subheader("Anomalías detectadas en temperatura:")
+        st.dataframe(outliers_temp)
 
-    # Análisis de humedad
-    df_hum = get_humidity_data()
-    st.subheader("Datos crudos de humedad:")
-    st.dataframe(df_hum)
+    if opcion == "Humedad" or opcion == "Ambos":
+        # Análisis de humedad
+        df_hum = get_humidity_data()
+        st.subheader("Datos crudos de humedad:")
+        st.dataframe(df_hum)
 
-    st.subheader("Estadísticas descriptivas de humedad:")
-    st.write(df_hum["humedad"].describe())
+        st.subheader("Estadísticas descriptivas de humedad:")
+        st.write(df_hum["humedad"].describe())
 
-    df_hum = detectar_anomalias(df_hum, "humedad")
-    outliers_hum = df_hum[df_hum["anomaly"] == -1]
+        df_hum = detectar_anomalias(df_hum, "humedad")
+        outliers_hum = df_hum[df_hum["anomaly"] == -1]
 
-    st.subheader("Visualización de humedad con anomalías:")
-    fig, ax = plt.subplots()
-    sns.lineplot(x="timestamp", y="humedad", data=df_hum, label="Humedad", ax=ax)
-    ax.scatter(outliers_hum["timestamp"], outliers_hum["humedad"], color="red", label="Anomalía", zorder=5)
-    ax.legend()
-    st.pyplot(fig)
+        st.subheader("Visualización de humedad con anomalías:")
+        fig, ax = plt.subplots()
+        sns.lineplot(x="timestamp", y="humedad", data=df_hum, label="Humedad", ax=ax)
+        ax.scatter(outliers_hum["timestamp"], outliers_hum["humedad"], color="red", label="Anomalía", zorder=5)
+        ax.legend()
+        st.pyplot(fig)
 
-    st.subheader("Anomalías detectadas en humedad:")
-    st.dataframe(outliers_hum)
+        st.subheader("Anomalías detectadas en humedad:")
+        st.dataframe(outliers_hum)
+    
